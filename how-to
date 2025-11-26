@@ -1,0 +1,24 @@
+
+
+ExecArtefactHunter — Collector + Correlator skeleton that finds executed files and flags suspicious ones by applying configurable rules.
+
+Quickstart (Windows developer machine)
+
+Install Rust toolchain (stable) and Node.js (LTS).
+
+Build collector:
+
+cd collector
+cargo build --release
+
+Run collector on a folder (admin recommended for access to system artifacts):
+
+target/release/collector --scan C:\Users\Public\samples --out findings.json
+
+Start the UI (optional):
+
+cd ui
+npm install
+npm start
+
+The UI expects the collector to expose a simple REST endpoint /api/findings that serves findings.json. For now you can cat findings.json into a small static server or adapt the collector to serve HTTP.
