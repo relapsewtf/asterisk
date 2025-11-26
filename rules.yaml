@@ -1,0 +1,37 @@
+rules:
+  - id: A_no_icon_elevated
+    description: "No icon but requires admin"
+    score: 40
+    conditions:
+      - pe.is_pe == true
+      - pe.has_icon == false
+      - pe.manifest.requestedExecution == "requireAdministrator"
+
+  - id: B_entropy_high
+    description: "High entropy"
+    score: 30
+    params:
+      threshold: 7.0
+    conditions:
+      - pe.entropy_whole > params.threshold
+
+  - id: C_unsigned_executed
+    description: "Unsigned binary that executed"
+    score: 25
+    conditions:
+      - pe.signature.valid != true
+      - artifacts.execution.exists == true
+
+  - id: D_usn_tamper
+    description: "USN journal indicates tamper"
+    score: 30
+    conditions:
+      - artifacts.usn contains ANY (reason in [DATA_OVERWRITE, BASIC_INFO_CHANGE])
+      - artifacts.execution.exists == true
+
+  - id: E_executed_from_temp
+    description: "Executed from Temp or roaming profile"
+    score: 15
+    conditions:
+      - artifacts.execution.exists == true
+      - path matches '.*\\AppData\\Roaming.*' OR path matches '.*\\Temp\\.*'
